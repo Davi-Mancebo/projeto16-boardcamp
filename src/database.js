@@ -10,8 +10,8 @@ const configDatabase = {
 
 export const db = new Pool(configDatabase);
 
-export const [GAMES, COSTUMERS, RENTALS] = [
+export const [GAMES, CUSTOMERS, RENTALS] = [
   "games",
-  "costumers",
+  "customers",
   "rentals"
 ].map((c) => `SELECT * FROM ${c}`);
