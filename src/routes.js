@@ -65,7 +65,7 @@ export const postCostumer = async (req, res) => {
   const joiObject = Joi.object({
     name: Joi.string().required(),
     phone: Joi.string().min(10).max(11).required(),
-    cpf: Joi.string().required(),
+    cpf: Joi.string().min(11).max(11).required(),
     birthday: Joi.string().required(),
   });
   const validadation = joiObject.validate(req.body);
@@ -85,8 +85,8 @@ export const putCostumer = async (req, res) => {
   const joiObject = Joi.object({
     name: Joi.string().required(),
     phone: Joi.number().min(10).max(11),
-    cpf: Joi.number().only(11),
-    birthday: Joi.date(),
+    cpf: Joi.number().max(11).required,
+    birthday: Joi.string(),
   });
   const validadation = joiObject.validate(req.body);
   try {
@@ -97,6 +97,7 @@ export const putCostumer = async (req, res) => {
 
     await db.query('UPDATE customers SET "name" = $1, "phone" = $2, "cpf" = $3, "birthday" = $4 WHERE "id" = $5',
     [req.body?.name, req.body?.phone, req.body?.cpf, req.body?.birthday, req.params?.id]);
+    return res.sendStatus(200)
   } catch (error) {
     return res.status(500).send(error.message);
   }
