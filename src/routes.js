@@ -120,7 +120,14 @@ export const getRentals = async (req, res) => {
   }
 };
 export const postRental = async (req, res) => {
+  const joiObject = Joi.object({
+    costumerId: Joi.number().required(),
+    gameId: Joi.number().required(),
+    daysRented: Joi.number().min(1).required(),
+  })
+  const validadation = joiObject.validate(req.body)
   try {
+    if(validadation.error) return res.sendStatus(400)
     let customerExist = await db.query('SELECT * FROM customers WHERE "id" = $1', [req.body?.customerId]);
     customerExist = customerExist.rows[0];
     if (!customerExist) return res.sendStatus(409);
@@ -173,7 +180,7 @@ export const deleteRental = async (req, res) => {
     let rental = await db.query('SELECT * FROM rentals WHERE "id" = $1', [req.params?.id]);
     if (!rental.rows[0]) return res.sendStatus(404);
 
-    if (!rental.returnDate) return res.sendStatus(400);
+    if (!rental.rows[0].returnDate) return res.sendStatus(400);
 
     await db.query('DELETE FROM rentals WHERE "id" = $1', [req.params?.id]);
 
