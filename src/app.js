@@ -10,13 +10,18 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-app.get(`/games`, R.getGames)
-app.post(`/games`, R.postGame)
+app.get(`/games`, R.getGames);
+app.post(`/games`, R.postGame);
 
-app.get("/costumers", R.getCustomers)
-app.get("/costumers/:id", R.getCustomers)
-app.post("/costumers", R.postCostumer)
-app.put("/costumers/:id", R.putCostumer)
+app.get("/costumers", R.getCustomers);
+app.get("/costumers/:id", R.getCustomers);
+app.post("/costumers", R.postCostumer);
+app.put("/costumers/:id", R.putCostumer);
+
+app.get("/rentals", R.getRentals);
+app.post("/rentals", R.postRental);
+app.post("/rentals/:id/return", R.returnRental)
+app.delete("/rentals/:id", R.deleteRental)
 
 app.listen(process.env.PORT, () => {
   console.log("Server is running");
