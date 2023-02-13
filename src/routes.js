@@ -64,9 +64,9 @@ export const getCustomersById = async (req, res) =>{
 export const postCostumer = async (req, res) => {
   const joiObject = Joi.object({
     name: Joi.string().required(),
-    phone: Joi.string().min(10).max(11),
-    cpf: Joi.string().min(11).max(11),
-    birthday: Joi.date(),
+    phone: Joi.string().required(),
+    cpf: Joi.string().required(),
+    birthday: Joi.string().required(),
   });
   const validadation = joiObject.validate(req.body);
   try {
