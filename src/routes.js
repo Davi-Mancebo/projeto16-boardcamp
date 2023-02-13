@@ -51,6 +51,18 @@ export const getCustomers = async (req, res) => {
     res.status(500).send(error.message);
   }
 };
+export const getCustomersById = async (req, res) =>{
+  const { id } = req.params;
+
+  try {
+    const customer = await db.query('SELECT * FROM customers where "id" = $1', [id]);
+
+    if (customer.rows.length === 0) return res.sendStatus(404);
+    return res.send(customer.rows[0]);
+  } catch (err) {
+    return res.status(500).send(err);
+}
+}
 export const postCostumer = async (req, res) => {
   const joiObject = Joi.object({
     name: Joi.string().required(),
@@ -61,7 +73,7 @@ export const postCostumer = async (req, res) => {
   const validadation = joiObject.validate(req.body);
   try {
     if (validadation.error) return res.sendStatus(400);
-    const exist = await db.query(CUSTOMERS + ` where cpf = ${req.body?.cpf}`);
+    const exist = await db.query((CUSTOMERS +' WHERE "cpf" = $1'), [req.body?.cpf]);
     if (exist.rows.length > 0) return res.sendStatus(409);
 
     await db.query('INSERT INTO customers ("name", "phone", "cpf", "birthday") VALUES ($1, $2, $3, $4)', 
@@ -110,7 +122,7 @@ export const getRentals = async (req, res) => {
 };
 export const postRental = async (req, res) => {
   try {
-    let customerExist = await db.query('SELECT * FROM customers WHERE "id" = $1', [customerId]);
+    let customerExist = await db.query('SELECT * FROM customers WHERE "id" = $1', [req.body?.customerId]);
     customerExist = customerExist.rows[0];
     if (!customerExist) return res.sendStatus(409);
 
@@ -130,24 +142,7 @@ export const postRental = async (req, res) => {
     return res.status(500).send(error.message);
   }
 };
-
-export const returnRental = async (req, res) => {
-  try {
-    let rental = await db.query('SELECT * FROM rentals WHERE "id" = $1', [id]);
-    rental = rental.rows[0];
-    if (!rental) return res.sendStatus(404);
-
-    if (!rental.returnDate) return res.sendStatus(400);
-
-    await db.query('DELETE FROM rentals WHERE "id" = $1', [id]);
-
-    return res.sendStatus(200);
-  } catch (err) {
-    return res.status(500).send(err);
-  }
-}
-
-export async function finish(req, res) {
+export async function finishRental(req, res) {
   try {
     let rental = await db.query('SELECT * FROM rentals WHERE "id" = $1', [req.params?.id]);
     rental = rental.rows[0];
