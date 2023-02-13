@@ -121,9 +121,9 @@ export const getRentals = async (req, res) => {
 };
 export const postRental = async (req, res) => {
   const joiObject = Joi.object({
-    costumerId: Joi.number().required(),
-    gameId: Joi.number().required(),
-    daysRented: Joi.number().min(1).required(),
+    costumerId: Joi.number().integer().required(),
+    gameId: Joi.number().integer().required(),
+    daysRented: Joi.number().integer().min(1).required(),
   })
   const validadation = joiObject.validate(req.body)
   try {
