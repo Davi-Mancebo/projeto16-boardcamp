@@ -52,10 +52,8 @@ export const getCustomers = async (req, res) => {
   }
 };
 export const getCustomersById = async (req, res) =>{
-  const { id } = req.params;
-
   try {
-    const customer = await db.query('SELECT * FROM customers where "id" = $1', [id]);
+    const customer = await db.query('SELECT * FROM customers where "id" = $1', [req.params?.id]);
 
     if (customer.rows.length === 0) return res.sendStatus(404);
     return res.send(customer.rows[0]);
@@ -66,8 +64,8 @@ export const getCustomersById = async (req, res) =>{
 export const postCostumer = async (req, res) => {
   const joiObject = Joi.object({
     name: Joi.string().required(),
-    phone: Joi.number().min(10).max(11),
-    cpf: Joi.number().only(11),
+    phone: Joi.string().min(10).max(11),
+    cpf: Joi.string().min(11).max(11),
     birthday: Joi.date(),
   });
   const validadation = joiObject.validate(req.body);
