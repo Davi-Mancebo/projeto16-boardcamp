@@ -66,7 +66,7 @@ export const postCostumer = async (req, res) => {
     name: Joi.string().required(),
     phone: Joi.string().min(10).max(11).required(),
     cpf: Joi.string().length(11).pattern(/^[0-9]+$/).required(),
-    birthday: Joi.string().required(),
+    birthday: Joi.date().optional(),
   });
   const validadation = joiObject.validate(req.body);
   try {
@@ -84,9 +84,9 @@ export const postCostumer = async (req, res) => {
 export const putCostumer = async (req, res) => {
   const joiObject = Joi.object({
     name: Joi.string().required(),
-    phone: Joi.number().min(10).max(11).required(),
-    cpf: Joi.number().max(11).required,
-    birthday: Joi.string(),
+    phone: Joi.string().min(10).max(11).pattern(/^[0-9]+$/).required(),
+    cpf: Joi.string().length(11).pattern(/^[0-9]+$/).required(),
+    birthday: Joi.date().optional(),
   });
   const validadation = joiObject.validate(req.body);
   try {
