@@ -120,14 +120,10 @@ export const getRentals = async (req, res) => {
   }
 };
 export const postRental = async (req, res) => {
-  const joiObject = Joi.object({
-    costumerId: Joi.number().integer().required(),
-    gameId: Joi.number().integer().required(),
-    daysRented: Joi.number().integer().min(1).required(),
-  })
+
   const validadation = joiObject.validate(req.body)
   try {
-    if(validadation.error) return res.sendStatus(400)
+    if(req.body?.daysRented < 0 || !Number.isInteger(req.body?.customerId) || !Number.isInteger(req.body?.gameId)) return res.sendStatus(400)
     let customerExist = await db.query('SELECT * FROM customers WHERE "id" = $1', [req.body?.customerId]);
     customerExist = customerExist.rows[0];
     if (!customerExist) return res.sendStatus(409);
