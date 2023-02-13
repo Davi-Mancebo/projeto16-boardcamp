@@ -13,10 +13,10 @@ app.use(cors());
 app.get(`/games`, R.getGames);
 app.post(`/games`, R.postGame);
 
-app.get("/costumers", R.getCustomers);
-app.get("/costumers/:id", R.getCustomersById);
-app.post("/costumers", R.postCostumer);
-app.put("/costumers/:id", R.putCostumer);
+app.get("/customers", R.getCustomers);
+app.get("/customers/:id", R.getCustomersById);
+app.post("/customers", R.postCostumer);
+app.put("/customers/:id", R.putCostumer);
 
 app.get("/rentals", R.getRentals);
 app.post("/rentals", R.postRental);
