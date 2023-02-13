@@ -131,11 +131,11 @@ export const postRental = async (req, res) => {
 
     const totalGames = await db.query('SELECT count(id) as quantidade FROM rentals WHERE "gameId" = $1 AND "returnDate" IS NULL', [gameExist.id])
     if (gameExist.stockTotal <= totalGames.rows[0].quantidade) return res.sendStatus(400);
+    const originalPrice = req.body?.daysRented * gameExist.pricePerDay
     await db.query(
       'INSERT INTO rentals ("customerId", "gameId", "rentDate", "daysRented", "returnDate", "originalPrice", "delayFee") VALUES ($1, $2, $3, $4, null, $5, null)',
       [req.body?.customerId, req.body?.gameId, dayjs().format(), req.body?.daysRented, originalPrice],
     );
-    const originalPrice = req.body?.daysRented * gameExist.pricePerDay
     return res.sendStatus(201);
   } catch (error) {
     return res.status(500).send(error.message);
